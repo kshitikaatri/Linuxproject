@@ -1,30 +1,30 @@
 #!/bin/bash
-# Script 1: System Identity Report
-# Course: Open Source Software
-# --- Variables ---
-STUDENT_NAME="Ananya Sharma"
-SOFTWARE_CHOICE="Python"
+# Script 2: FOSS Package Inspector
+# Usage: ./2_package_inspector.sh <package_name> (e.g., python3)
 
-# --- System info ---
-KERNEL=$(uname -r)
-USER_NAME=$(whoami)
-UPTIME=$(uptime -p)
-DISTRO=$(cat /etc/os-release | grep "^PRETTY_NAME" | cut -d'"' -f2)
-CURRENT_DATE=$(date +"%A, %B %d, %Y %T")
+PACKAGE=${1:-"python3"} # Defaults to python3 if no argument provided
 
-# --- Display ---
-echo "==========================================="
-echo "        The Open Source Audit              "
-echo "==========================================="
-echo "Auditor : $STUDENT_NAME"
-echo "Software: $SOFTWARE_CHOICE"
-echo "-------------------------------------------"
-echo "OS/Distro: $DISTRO"
-echo "Kernel   : $KERNEL"
-echo "User     : $USER_NAME"
-echo "Home Dir : $HOME"
-echo "Uptime   : $UPTIME"
-echo "Date/Time: $CURRENT_DATE"
-echo "-------------------------------------------"
-echo "License Note: The core Linux kernel powering this OS is covered by the GPL v2 license."
-echo "==========================================="  
+# Check if package is installed (works on Debian/Ubuntu systems using dpkg)
+if dpkg -l "$PACKAGE" &> /dev/null; then
+    echo "SUCCESS: $PACKAGE is installed on this system."
+    echo "--- Package Details ---"
+    # Extract version and summary details
+    apt-cache show "$PACKAGE" | grep -E 'Version|Description-en' | head -n 2
+else
+    echo "NOTICE: $PACKAGE is NOT installed."
+fi
+
+echo "--- FOSS Philosophy Note ---"
+# Case statement for philosophy notes
+case $PACKAGE in
+    apache2|httpd) 
+        echo "Apache: The web server that built the open internet." ;;
+    mysql-server|mysql) 
+        echo "MySQL: Open source at the heart of millions of apps." ;;
+    python3|python) 
+        echo "Python: A language shaped entirely by community, fueling the modern AI revolution." ;;
+    vlc) 
+        echo "VLC: Plays anything - built by students in Paris, a true community triumph." ;;
+    *) 
+        echo "$PACKAGE: Another piece of the vast open-source puzzle." ;;
+esac
